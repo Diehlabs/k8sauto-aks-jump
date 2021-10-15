@@ -77,8 +77,12 @@ jobs:
             body: output
           })
 
+    - name: Terraform Apply
+      id: apply
+      if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+      run: terraform apply -auto-approve
 
-    - name: Install requirements
+    - name: Ansible
       id: requirements
       run: |
         if [[ -f ansible/requirements.txt ]]; then
@@ -87,10 +91,7 @@ jobs:
         if [[ -f ansible/requirements.yaml ]]; then
           ansible-galaxy install -r ansible/requirements.yaml
         fi
+        if [[ -f ansible/requirements.yaml ]]; then
+          ansible-playbook ./ansible/setup.yml -i ./ansible/inventory.yml --private-key ./ansible/rsa.key
+        fi
       if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
-
-
-    - name: Terraform Apply
-      id: apply
-      if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
-      run: terraform apply -auto-approve
