@@ -88,10 +88,10 @@ jobs:
         if [[ -f ansible/requirements.txt ]]; then
           pip3 install -r ansible/requirements.txt
         fi
-        if [[ -f ansible/requirements.yaml ]]; then
+        if [[ -f ansible/requirements.yml ]]; then
           ansible-galaxy install -r ansible/requirements.yaml
         fi
-        if [[ -f ansible/requirements.yaml ]]; then
+        if [[ -f ./ansible/inventory.yml ]]; then
           ansible-playbook ./ansible/setup.yml -i ./ansible/inventory.yml --private-key ./ansible/rsa.key
         fi
       if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
