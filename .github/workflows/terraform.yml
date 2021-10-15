@@ -89,7 +89,7 @@ jobs:
           pip3 install -r ansible/requirements.txt
         fi
         if [[ -f ansible/requirements.yml ]]; then
-          ansible-galaxy install -r ansible/requirements.yaml
+          ansible-galaxy install -r ansible/requirements.yml
         fi
         if [[ -f ./ansible/inventory.yml ]]; then
           ansible-playbook ./ansible/setup.yml -i ./ansible/inventory.yml --private-key ./ansible/rsa.key
