@@ -9,23 +9,18 @@ resource "local_file" "ansible_inventory" {
   })
 }
 
-output "ansible_inventory" {
-  value     = local_file.ansible_inventory.content
-  sensitive = true
-}
-
 resource "local_file" "rsa_key" {
   filename          = "${path.module}/ansible/rsa.key"
   sensitive_content = data.terraform_remote_state.core.outputs.ssh_key.private_key_pem
   file_permission   = "0600"
 }
 
-resource "null_resource" "ansible" {
-  depends_on = [
-    local_file.ansible_inventory,
-    local_file.rsa_key,
-  ]
-  provisioner "local-exec" {
-    command = "ansible-playbook ${path.module}/ansible/setup.yml -i ${path.module}/ansible/inventory.yml --private-key ${path.module}/ansible/rsa.key"
-  }
-}
+# resource "null_resource" "ansible" {
+#   depends_on = [
+#     local_file.ansible_inventory,
+#     local_file.rsa_key,
+#   ]
+#   provisioner "local-exec" {
+#     command = "ansible-playbook ${path.module}/ansible/setup.yml -i ${path.module}/ansible/inventory.yml --private-key ${path.module}/ansible/rsa.key"
+#   }
+# }
